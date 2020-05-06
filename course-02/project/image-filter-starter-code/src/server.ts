@@ -41,19 +41,19 @@ import https from "https";
         try {
             const parsedImgUrl = new URL(image_url)
 
-            https.request(parsedImgUrl).on('response',function (getRes) {
-                if(getRes.statusCode != 200){
+            https.request(parsedImgUrl).on('response', function (getRes) {
+                if (getRes.statusCode != 200) {
                     return res.status(404).send("No image found!")
-                }else if(getRes.headers['content-type']==null ||
-                    !getRes.headers['content-type'].match(/image/)){
+                } else if (getRes.headers['content-type'] == null ||
+                    !getRes.headers['content-type'].match(/image/)) {
                     return res.status(400).send("Content is not image")
                 }
-            }).on('error', function(get){
+            }).on('error', function (get) {
                 return res.status(500).send("Internal server error")
             }).end()
 
             const tmpFilePath = await filterImageFromURL(image_url)
-            res.on('finish',function(){
+            res.on('finish', function () {
                 deleteLocalFiles([tmpFilePath])
             })
             res.sendFile(tmpFilePath)
